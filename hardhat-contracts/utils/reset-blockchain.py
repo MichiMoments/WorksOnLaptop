@@ -1,4 +1,5 @@
 import os
+import shutil
 
 # Cambiar al directorio del proyecto blockchain
 blockchain_project = os.path.abspath(os.path.join("..", "interbank-blockchain"))
@@ -22,3 +23,11 @@ commands = [
 
 for command in commands:
     os.system(command)
+
+blockchain_project = os.path.abspath(os.path.join("..", "hardhat-contracts"))
+chain_folder = os.path.join(blockchain_project, "ignition", "deployments", "chain-2018")
+if os.path.isdir(chain_folder):
+    shutil.rmtree(chain_folder)
+    print(f"Removed folder and contents: {chain_folder}")
+else:
+    print(f"No se encontró la carpeta: {chain_folder}")

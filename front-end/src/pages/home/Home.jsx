@@ -1,8 +1,9 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import BankAccounts from "../../contracts/bankAccounts/BankAccounts"
 import StableCoin from "../../contracts/stableCoin/stableCoin"
 import "./Home.scss"
-
+import { agent } from '../../veramo/agent.ts'
+import { toB64Url, utf8B64Url, hexToBytes } from '../../utils/jwt';
 import Admin from "../admin/Admin"
 
 function BankAdmin() {
@@ -59,31 +60,116 @@ function BankAdmin() {
         await mintTx.wait()
         console.log(`Mint transaction successful: ${mintTx.hash}`)
 
-        // Set login status to logged in
-        setLoginStatus(2)
+        // Create DID
+        await createDidKey(name, publicKey)
+
+        // Set login status to go to home
+        setLoginStatus(1)
+
+        createDidKey(name, loginKey)
 
         // Add to allowlists in the background
         await bankAccounts.addAllowlists(enode, address, rpcEndpoint)
     }
 
-    // Login function
-    const login = async () => {
-        // Get the node public key from the private key
-        const publicKey64 = bankAccounts.getNodePublicKey(loginKey)
-        // Add 0x to the beginning
-        
-        console.log(`Public key: ${publicKey64}`)
+    // Creates the DID key and signs a JWT for the backend
+    async function createDidKey(name, loginKey) {
+        const identifier = await agent.didManagerCreate({
+            provider: 'did:key',
+            kms: 'local',
+            alias: name,
+            options: { keyType: 'Ed25519' },
+        })
+        console.log('New DID:', identifier.did)
+        console.log('New DID identifier:', identifier)
 
-        // Attempt to login
-        const exists = await bankAccounts.login(publicKey64, bankName)
-        if (exists) {
-            console.log("Login successful")
-            setLoginStatus(2)
-            // Sign the contract with the bank account's private key
-            bankAccounts.signContract(loginKey)
-        } else {
-            console.error("Login failed")
-            alert("Login failed. Check your bank name and private key.")
+        const header  = { alg: 'EdDSA', typ: 'JWT', kid: `${identifier.did}#${identifier.did.slice(8)}` };
+        const now     = Math.floor(Date.now() / 1000);
+        const payload = { iss: identifier.did, sub: identifier.did, aud: 'bank-backend', iat: now, exp: now + 300 };
+
+        const h = utf8B64Url(header);
+        const p = utf8B64Url(payload);
+        const signingInput = `${h}.${p}`;
+
+        const sigHex = await agent.keyManagerSign({
+            keyRef  : identifier.controllerKeyId,
+            data    : signingInput,
+            encoding: 'utf-8',
+            algorithm: 'EdDSA',                       
+        });
+        const jwt = `${signingInput}.${toB64Url(hexToBytes(sigHex))}`;
+        console.log(JSON.stringify({ publicKey: identifier.keys[0].publicKeyHex, bankName: name, did: identifier.did, loginKey: loginKey }))
+        const r = await fetch('http://localhost:3001/login', {
+            method : 'POST',    
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${jwt}` },
+            body   : JSON.stringify({ publicKey: identifier.keys[0].publicKeyHex, bankName: name, did: identifier.did, loginKey: loginKey }),
+        });
+
+        if (!r.ok) throw new Error(await r.text());
+        console.log(await r.json());
+
+        const blob = new Blob([identifier.did], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'did.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // Function that receives a txt text and console logs it
+    async function checkDIDKey(txt) {
+        console.log('DID Key:', txt);
+        try {
+            const didDoc = await agent.resolveDid({ didUrl: txt });
+            console.log('Resolved DID Document:', didDoc);
+            if (!didDoc.didDocument) {
+                console.error('DID invalid');
+                alert('DID invalid, please check the file content.');
+                return;
+            }
+            
+            const resp = await fetch(
+                `http://localhost:3001/getSecret?did=${encodeURIComponent(txt)}`,
+                { method: 'GET' }
+            );
+            if (!resp.ok) {
+                if (resp.status === 404) {
+                    alert('DID not found. Please register your bank first.');
+                    return;
+                }
+                throw new Error(`Backend error ${resp.status}: ${await resp.text()}`);
+            }
+            const { name, login } = await resp.json();
+            console.log('Name:', name);
+            console.log('Type of name:', typeof name);
+            console.log('Login Key:', login);
+            setBankName(name);
+            if (name == "Bank E") {
+                setLoginKey("0xa5eaf9fcc98ac6c8a02853725305f1a17d9824598fd27f40fe55ed345e11e049")
+                console.log("Bank E detected, setting login status to 2")
+                setLoginStatus(2);
+            } else {
+                setLoginKey(login);
+                const publicKey64 = bankAccounts.getNodePublicKey(login)
+                // Attempt to login
+                const exists = await bankAccounts.login(publicKey64, bankName)
+                if (exists) {
+                    console.log("Login successful")
+                    setLoginStatus(2)
+                    // Sign the contract with the bank account's private key
+                    bankAccounts.signContract(login)
+                } else {
+                    console.error("Login failed")
+                    alert("Login failed. Check your bank name and private key.")
+                }
+            }
+            
+
+        } catch (err) {
+            console.error('Error:', err.message || err);
         }
     }
 
@@ -122,37 +208,25 @@ function BankAdmin() {
 
                 {loginStatus === 1 && (
                     <div className="login">
-                        <div className="login-name">Enter your bank name</div>
-                        <br />
-                        <input
-                            type="text"
-                            value={bankName}
-                            onChange={(e) => setBankName(e.target.value)}
-                            className="text-input-short"
-                        />
-                        <br />
-
-                        <div className="login-key">Enter your bank node private key (32 bytes)</div>
-                        <br />
-                        <input
-                            type="text"
-                            value={loginKey}
-                            onChange={(e) => setLoginKey(e.target.value)}
-                            className="text-input-short"
-                        />
-                        <br />
-
-                        <button onClick={() => login()} className="button">
-                            Login
-                        </button>
-                        <br />
+                        <div className="insert-did-label">
+                            Insert your DID
+                        </div>
+                        <div>
+                            <input
+                                type="file"
+                                accept=".txt"
+                                onChange={async (e) => {
+                                    const file = e.target.files[0];
+                                    if (!file) return;
+                                    const text = await file.text();
+                                    checkDIDKey(text);
+                                }}
+                                className="file-input"
+                            />
+                        </div>
 
                         <div className="text-button last-tag" onClick={() => setLoginStatus(3)}>
                             Register
-                        </div>
-
-                        <div className="text-button" onClick={() => testingValues()}>
-                            Use testing values
                         </div>
                     </div>
                 )}

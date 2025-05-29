@@ -19,7 +19,7 @@
   "homepage": "https://github.com/interbanking-transactions-blockchain/hardhat-contracts#readme",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.16"
+    "hardhat": "^2.24.1"
   },
   "dependencies": {
     "@noble/secp256k1": "^2.1.0",
