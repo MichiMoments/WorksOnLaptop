@@ -1,0 +1,29 @@
+{
+  "name": "hardhat-contracts",
+  "version": "1.0.0",
+  "description": "Hardhat project used for contracts deployment on the private blockchain and mainnet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/interbanking-transactions-blockchain/hardhat-contracts.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/interbanking-transactions-blockchain/hardhat-contracts/issues"
+  },
+  "homepage": "https://github.com/interbanking-transactions-blockchain/hardhat-contracts#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.16"
+  },
+  "dependencies": {
+    "@noble/secp256k1": "^2.1.0",
+    "@openzeppelin/contracts": "^4.9.6",
+    "dotenv": "^16.4.5"
+  }
+}

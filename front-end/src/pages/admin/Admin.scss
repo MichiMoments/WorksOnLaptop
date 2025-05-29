@@ -1,0 +1,38 @@
+.container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10vh;
+
+    width: 100vw;
+    min-height: 75vh;
+    background-color: gray;
+
+    .button {
+        margin-top: 5vh;
+        width: 10vw;
+    }
+
+    .pageToOpen {
+        padding-bottom: 50vh;
+    }
+
+}
+
+.text-input-short {
+    text-align: center;
+    width: 25vw;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 5vw;
+    .last-card {
+        padding-bottom: 10vh;
+    }
+}

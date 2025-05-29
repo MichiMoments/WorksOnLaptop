@@ -1,0 +1,83 @@
+.admin {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    width: 100vw;
+
+    .header {
+        flex: 0.2;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+        width: 50vw;
+        
+        text-align: center;
+    }
+
+    .body {
+        flex: 0.8;
+
+        .login, .logged-in, .register {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .text-input-short {
+            text-align: center;
+            width: 25vw;
+        }
+        .text-input-long {
+            width: 25vw;
+            height: 20vh;
+            background-color: black;
+            font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+            font-size: 1em;
+            border-width: 0.1vw;
+            border-color: white;
+
+        }
+
+        .last-tag {
+            padding-bottom: 10vh;
+        }
+
+        .text-button {
+            color: #33f7da;
+            text-decoration: underline;
+            padding-top: 3vh;
+            cursor: pointer;
+
+            &:hover {
+                color: #b7f7db;
+            }
+        }
+
+        .button {
+            background-color: white;
+            color: black;
+        }
+
+        .register-button {
+            margin-top: 5vh;
+        }
+
+
+        .bank-addresses {
+            padding-top: 2vh;
+            padding-bottom: 3vh;
+        }
+
+        .bank-enode, .bank-account-private-key, .login-name, login-key {
+            padding-top: 2vh;
+        }
+
+        .logged-in {
+            width: 20vw;
+            text-align: center;
+        }
+    }
+}
