@@ -254,6 +254,91 @@ services:
         "--bootnodes=enode://69e84b9c135d789b637ba454fdcf7c348b3fcee0713e248c1e3edcc652088563ae5a4fd0698f7f796b875bd8008c9197022e7c15c3680e8b7cb7ec68f8b33dfa@172.20.0.3:30303,enode://18808d740470a14ca76548ca37643e69806f562b36453c4f72e36bc9f73e01bce9de5e924f4fd3a2540f748bd9afe198f9076ee9eebc200bb70e928d6cf43d20@172.20.0.4:30303",
       ]
 
+  tessera-a:
+    image: quorumengineering/tessera:23.4
+    container_name: tessera-a
+    hostname: tessera-a
+    working_dir: /config
+    volumes:
+    - ./config/nodes/1/Tessera:/config
+    entrypoint: ["/tessera/bin/tessera"]
+    command: [ "--configfile", "tessera.conf"]
+    networks:
+      besu-network:
+        ipv4_address: 172.20.0.11
+    ports:
+    - 9101:9101
+    - 9102:9102
+    - 9103:9103
+
+  tessera-b:
+    image: quorumengineering/tessera:23.4
+    container_name: tessera-b
+    hostname: tessera-b
+    working_dir: /config
+    volumes:
+    - ./config/nodes/2/Tessera:/config
+    entrypoint: ["/tessera/bin/tessera"]
+    command: [ "--configfile", "tessera.conf"]
+    networks:
+      besu-network:
+        ipv4_address: 172.20.0.12
+    ports:
+    - 9201:9201
+    - 9202:9202
+    - 9203:9203
+
+  tessera-c:
+    image: quorumengineering/tessera:23.4
+    container_name: tessera-c
+    hostname: tessera-c
+    working_dir: /config
+    volumes:
+    - ./config/nodes/3/Tessera:/config
+    entrypoint: ["/tessera/bin/tessera"]
+    command: [ "--configfile", "tessera.conf"]
+    networks:
+      besu-network:
+        ipv4_address: 172.20.0.13
+    ports:
+    - 9301:9301
+    - 9302:9302
+    - 9303:9303
+
+  tessera-d:
+    image: quorumengineering/tessera:23.4
+    container_name: tessera-d
+    hostname: tessera-d
+    working_dir: /config
+    volumes:
+    - ./config/nodes/4/Tessera:/config
+    entrypoint: ["/tessera/bin/tessera"]
+    command: [ "--configfile", "tessera.conf"]
+    networks:
+      besu-network:
+        ipv4_address: 172.20.0.14
+    ports:
+    - 9401:9401
+    - 9402:9402
+    - 9403:9403
+
+  tessera-e:
+    image: quorumengineering/tessera:23.4
+    container_name: tessera-e
+    hostname: tessera-e
+    working_dir: /config
+    volumes:
+    - ./config/nodes/5/Tessera:/config
+    entrypoint: ["/tessera/bin/tessera"]
+    command: [ "--configfile", "tessera.conf"]
+    networks:
+      besu-network:
+        ipv4_address: 172.20.0.15
+    ports:
+    - 9501:9501
+    - 9502:9502
+    - 9503:9503
+  
 networks:
   besu-network:
     driver: bridge
