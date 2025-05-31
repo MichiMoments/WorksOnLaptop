@@ -17,7 +17,6 @@ function ExchangeTokens(){
 
     const handleCheck = async () => {
         try {
-            // fe3b557e8fb62b89f4916b721be55ceb828dbd73
             if (!ethers.isAddress(checkAccount)) {
                 throw new Error("Invalid address format");
             }

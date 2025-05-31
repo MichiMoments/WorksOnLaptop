@@ -22,6 +22,7 @@
     "hardhat": "^2.24.1"
   },
   "dependencies": {
+    "@chainlink/contracts": "^1.4.0",
     "@noble/secp256k1": "^2.1.0",
     "@openzeppelin/contracts": "^4.9.6",
     "dotenv": "^16.4.5"

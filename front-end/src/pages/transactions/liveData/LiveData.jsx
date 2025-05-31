@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./LiveData.scss";
 
+// Utilizar este archivo si no esta cargado los nodos de chainlink en la red
+
 function LoadingAnimation({ progress }) {
   const radius = 50;
   const circumference = 2 * Math.PI * radius;
@@ -45,11 +47,10 @@ function LiveData() {
   const [progress, setProgress] = useState(0);
   const [data, setData] = useState(null);
 
-  // When the component mounts, start the progress simulation
   useEffect(() => {
     let interval = null;
-    const totalDuration = 10000; // total loading time: 10 seconds
-    const intervalDuration = 100; // update every 100ms
+    const totalDuration = 10000; 
+    const intervalDuration = 100; 
     const steps = totalDuration / intervalDuration;
     const increment = 100 / steps;
 
@@ -69,10 +70,8 @@ function LiveData() {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch real-time prices using CoinGecko's API
   const fetchData = async () => {
     try {
-      // Using CoinGecko API for USDC, Ethereum, and EURC (assumed as stasis-eurs)
       const response = await fetch(
         "https://api.coingecko.com/api/v3/simple/price?ids=usd-coin,ethereum,stasis-eurs&vs_currencies=usd"
       );

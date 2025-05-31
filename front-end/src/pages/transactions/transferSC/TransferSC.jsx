@@ -85,8 +85,9 @@ function TransferSC() {
               value={fromCurrency}
               onChange={(e) => setFromCurrency(e.target.value)}
             >
-              <option value="SC">SC</option>
-              {/* Add more options if needed */}
+              <option value="CCIP-BnM">CCIP-BnM</option>
+              <option value="CCIP-LnM">CCIP-LnM</option>
+              {/*  */}
             </select>
           </div>
           <div className="form-group">
@@ -103,8 +104,9 @@ function TransferSC() {
               value={toCurrency}
               onChange={(e) => setToCurrency(e.target.value)}
             >
-              <option value="SC">SC</option>
-              {/* Add more options if needed */}
+              <option value="CCIP-BnMC">CCIP-BnM</option>
+              <option value="CCIP-LnM">CCIP-LnM</option>
+              {/*  */}
             </select>
           </div>
           <button onClick={handleTransfer}>Transfer SC</button>
@@ -114,15 +116,24 @@ function TransferSC() {
       {loading && <LoadingAnimation progress={progress} />}
 
       {showPopup && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div
+          className="modal-overlay"
+          onClick={() => setShowPopup(false)}
+          tabIndex={-1}
+          style={{ cursor: "pointer" }}
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            tabIndex={0}
+          >
             <button
               className="modal-close"
               onClick={() => setShowPopup(false)}
+              aria-label="Close"
             >
-              x
             </button>
-            <p>{`Transferred ${amount} from ${fromCurrency} to ${toCurrency}`}</p>
+            <h2>Transfer Successful</h2>
           </div>
         </div>
       )}

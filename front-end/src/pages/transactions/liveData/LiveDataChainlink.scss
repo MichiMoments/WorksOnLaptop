@@ -1,0 +1,68 @@
+/* LiveData component styles */
+.liveData {
+    color: black;  /* Ensure all text is rendered in black */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  
+    h2 {
+      margin-bottom: 20px;
+    }
+  
+    .dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 400px;
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
+      .token {
+        background-color: #f2f2f2;
+        padding: 1rem;
+        border-radius: 4px;
+        
+        h3 {
+          margin: 0;
+          margin-bottom: 5px;
+        }
+        
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+  
+  /* Loading animation container (shared style) */
+  .loading-container {
+    background-color: #fff;
+    width: 180px;
+    height: 240px;
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .progress-ring__circle {
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+  
+  .loading-text {
+    margin-top: 10px;
+    font-weight: bold;
+    min-height: 1.5em;
+  }
+  
